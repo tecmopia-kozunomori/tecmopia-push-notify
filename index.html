@@ -70,6 +70,7 @@ const VAPID_KEY = 'BM06HaA0sSiVNvccQrts4cqoLMrYTTjMkReyHN7440gLMrjhYy-Vxj_GAMUKQ
 
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
+console.info('[TECMOPIA Push] token-register-v2 loaded');
 
 const gasUrl = document.getElementById('gasUrl');
 const pairCode = document.getElementById('pairCode');
@@ -152,8 +153,6 @@ async function uploadToken(token) {
     setStatus('❌ ' + (err && err.message ? err.message : err), 'err');
   }
 }
-
-});
 
 onMessage(messaging, payload => {
   const d = payload && payload.data || {};
