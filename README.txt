@@ -24,3 +24,8 @@ GitHub Pages 側に置くファイルです。
 ・FirebaseのWeb設定値とVAPID公開キーはクライアント側に置く公開情報です。
 ・Service Workerはindex.htmlと同じフォルダに置いてください。
 ・登録コードは10分間・1回のみ有効です。
+
+
+【2026-10-13 Firebase 12.18.0固定版】
+Firebase JS SDK 13.0.0で従来getToken()経路が非推奨化されたため、既存GASのFCM登録トークン方式を維持する目的で12.18.0に固定しています。
+GitHub Pagesでは index.html と firebase-messaging-sw.js の2ファイルを上書きし、反映後にCtrl+F5してください。

@@ -19,8 +19,8 @@ self.addEventListener('notificationclick', event => {
   );
 });
 
-importScripts('https://www.gstatic.com/firebasejs/13.0.0/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/13.0.0/firebase-messaging-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging-compat.js');
 
 firebase.initializeApp({
   "apiKey": "AIzaSyD93d904TqIX9mTne67DWkd4W71e3aDcxM",

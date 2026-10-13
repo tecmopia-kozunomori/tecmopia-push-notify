@@ -62,15 +62,15 @@ button:disabled{opacity:.55;cursor:wait}
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-import { getMessaging, getToken, deleteToken, onMessage } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-messaging.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import { getMessaging, getToken, deleteToken, onMessage } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging.js";
 
 const firebaseConfig = {"apiKey": "AIzaSyD93d904TqIX9mTne67DWkd4W71e3aDcxM", "authDomain": "tecmopia-push.firebaseapp.com", "projectId": "tecmopia-push", "storageBucket": "tecmopia-push.firebasestorage.app", "messagingSenderId": "469386287853", "appId": "1:469386287853:web:5450c3536fe30f7de78ae4"};
 const VAPID_KEY = 'BM06HaA0sSiVNvccQrts4cqoLMrYTTjMkReyHN7440gLMrjhYy-Vxj_GAMUKQknPq_6c6caH3VC3g5v4bBHdEz4';
 
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
-console.info('[TECMOPIA Push] token-register-v2 loaded');
+console.info('[TECMOPIA Push] firebase12.18.0-token-register-v3 loaded');
 
 const gasUrl = document.getElementById('gasUrl');
 const pairCode = document.getElementById('pairCode');
