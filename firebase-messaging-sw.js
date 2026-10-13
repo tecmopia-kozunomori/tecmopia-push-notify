@@ -23,7 +23,7 @@ importScripts('https://www.gstatic.com/firebasejs/13.0.0/firebase-app-compat.js'
 importScripts('https://www.gstatic.com/firebasejs/13.0.0/firebase-messaging-compat.js');
 
 firebase.initializeApp({
-  "apiKey": "AIzaSyD93d904TgIX9mTne67DWkd4W71e3aDcxM",
+  "apiKey": "AIzaSyD93d904TqIX9mTne67DWkd4W71e3aDcxM",
   "authDomain": "tecmopia-push.firebaseapp.com",
   "projectId": "tecmopia-push",
   "storageBucket": "tecmopia-push.firebasestorage.app",
