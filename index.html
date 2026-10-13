@@ -63,7 +63,7 @@ button:disabled{opacity:.55;cursor:wait}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-import { getMessaging, onRegistered, onUnregistered, register, onMessage } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-messaging.js";
+import { getMessaging, getToken, deleteToken, onMessage } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-messaging.js";
 
 const firebaseConfig = {"apiKey": "AIzaSyD93d904TqIX9mTne67DWkd4W71e3aDcxM", "authDomain": "tecmopia-push.firebaseapp.com", "projectId": "tecmopia-push", "storageBucket": "tecmopia-push.firebasestorage.app", "messagingSenderId": "469386287853", "appId": "1:469386287853:web:5450c3536fe30f7de78ae4"};
 const VAPID_KEY = 'BM06HaA0sSiVNvccQrts4cqoLMrYTTjMkReyHN7440gLMrjhYy-Vxj_GAMUKQknPq_6c6caH3VC3g5v4bBHdEz4';
@@ -82,7 +82,7 @@ gasUrl.value = localStorage.getItem('tecmopia_push_gas_url') || '';
 deviceName.value = localStorage.getItem('tecmopia_push_device_name') || '事務所PC';
 
 let pending = null;
-let currentFid = '';
+let currentToken = '';
 
 function setStatus(text, cls='') {
   statusEl.textContent = text;
@@ -118,16 +118,16 @@ function jsonp(url, params) {
   });
 }
 
-async function uploadFid(fid) {
+async function uploadToken(token) {
   if (!pending || pending.uploading) return;
   pending.uploading = true;
-  currentFid = fid;
+  currentToken = token;
 
   try {
     const result = await jsonp(pending.gas, {
       mode: 'push-register',
       code: pending.code,
-      fid: fid,
+      token: token,
       name: pending.name,
       ua: navigator.userAgent
     });
@@ -136,10 +136,11 @@ async function uploadFid(fid) {
 
     localStorage.setItem('tecmopia_push_gas_url', pending.gas);
     localStorage.setItem('tecmopia_push_device_name', pending.name);
-    localStorage.setItem('tecmopia_push_fid', fid);
+    localStorage.setItem('tecmopia_push_token', token);
+    localStorage.removeItem('tecmopia_push_fid');
 
     fidBox.style.display = 'block';
-    fidBox.textContent = '登録端末ID：' + fid;
+    fidBox.textContent = 'FCM登録トークン：…' + token.slice(-16);
     setStatus('✅ 登録完了。このPCはWeb Push通知を受け取れます。', 'ok');
     registerBtn.disabled = false;
     registerBtn.textContent = '登録済み（再登録も可能）';
@@ -152,14 +153,6 @@ async function uploadFid(fid) {
   }
 }
 
-onRegistered(messaging, fid => {
-  uploadFid(fid);
-});
-
-onUnregistered(messaging, fid => {
-  const storedGas = localStorage.getItem('tecmopia_push_gas_url');
-  if (!storedGas || !fid) return;
-  jsonp(storedGas, {mode:'push-unregister', fid}).catch(() => {});
 });
 
 onMessage(messaging, payload => {
@@ -190,21 +183,16 @@ registerBtn.addEventListener('click', async () => {
     await navigator.serviceWorker.ready;
 
     pending = {gas, code, name, uploading:false};
-    setStatus('FirebaseへこのPCを登録しています...');
+    setStatus('FCM登録トークンを取得しています...');
 
-    await register(messaging, {
+    const token = await getToken(messaging, {
       vapidKey: VAPID_KEY,
       serviceWorkerRegistration: sw
     });
 
-    // FIDはonRegistered()へ非同期で届く。
-    setTimeout(() => {
-      if (pending && !pending.uploading) {
-        registerBtn.disabled = false;
-        registerBtn.textContent = 'このPCで通知を受け取る';
-        setStatus('FIDの取得を待っています。もう一度押すと再試行できます。');
-      }
-    }, 12000);
+    if (!token) throw new Error('FCM登録トークンを取得できませんでした。');
+
+    await uploadToken(token);
 
   } catch (err) {
     pending = null;
@@ -214,10 +202,10 @@ registerBtn.addEventListener('click', async () => {
   }
 });
 
-const savedFid = localStorage.getItem('tecmopia_push_fid');
-if (savedFid) {
+const savedToken = localStorage.getItem('tecmopia_push_token');
+if (savedToken) {
   fidBox.style.display = 'block';
-  fidBox.textContent = '前回登録端末ID：' + savedFid;
+  fidBox.textContent = '前回登録トークン：…' + savedToken.slice(-16);
 }
 </script>
 </body>
